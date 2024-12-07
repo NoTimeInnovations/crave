@@ -6,25 +6,48 @@ import {
   onAuthStateChanged,
   type User 
 } from 'firebase/auth';
-import { doc, setDoc, getFirestore } from 'firebase/firestore';
+import { doc, setDoc, getDoc, getFirestore } from 'firebase/firestore';
 import { auth } from '@/lib/firebase';
+
+interface UserData {
+  email: string;
+  role: 'user' | 'hotel';
+  hotelName?: string;
+  location?: string;
+}
 
 interface AuthState {
   user: User | null;
+  userData: UserData | null;
   loading: boolean;
   error: string | null;
   signUp: (email: string, password: string) => Promise<void>;
   signUpAsPartner: (email: string, password: string, hotelName: string, location: string) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
+  fetchUserData: (uid: string) => Promise<void>;
 }
 
 const db = getFirestore();
 
-export const useAuthStore = create<AuthState>((set) => ({
+export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
+  userData: null,
   loading: true,
   error: null,
+
+  fetchUserData: async (uid: string) => {
+    try {
+      const docRef = doc(db, 'users', uid);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        set({ userData: docSnap.data() as UserData });
+      }
+    } catch (error) {
+      set({ error: (error as Error).message });
+    }
+  },
+
   signUp: async (email, password) => {
     try {
       set({ error: null });
@@ -34,11 +57,13 @@ export const useAuthStore = create<AuthState>((set) => ({
         role: 'user',
         createdAt: new Date().toISOString(),
       });
+      await get().fetchUserData(userCredential.user.uid);
     } catch (error) {
       set({ error: (error as Error).message });
       throw error;
     }
   },
+
   signUpAsPartner: async (email, password, hotelName, location) => {
     try {
       set({ error: null });
@@ -48,26 +73,31 @@ export const useAuthStore = create<AuthState>((set) => ({
         hotelName,
         location,
         role: 'hotel',
+        enquiry: 0,
         createdAt: new Date().toISOString(),
       });
+      await get().fetchUserData(userCredential.user.uid);
     } catch (error) {
       set({ error: (error as Error).message });
       throw error;
     }
   },
+
   signIn: async (email, password) => {
     try {
       set({ error: null });
-      await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      await get().fetchUserData(userCredential.user.uid);
     } catch (error) {
       set({ error: (error as Error).message });
       throw error;
     }
   },
+
   signOut: async () => {
     try {
       await firebaseSignOut(auth);
-      set({ user: null, error: null });
+      set({ user: null, userData: null, error: null });
     } catch (error) {
       set({ error: (error as Error).message });
       throw error;
@@ -76,6 +106,9 @@ export const useAuthStore = create<AuthState>((set) => ({
 }));
 
 // Set up auth state listener
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
   useAuthStore.setState({ user, loading: false });
+  if (user) {
+    await useAuthStore.getState().fetchUserData(user.uid);
+  }
 });

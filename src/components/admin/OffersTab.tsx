@@ -21,6 +21,7 @@ export function OffersTab() {
   const [newOffer, setNewOffer] = useState({
     menuItemId: '',
     newPrice: '',
+    itemsAvailable: '',
     hours: '0',
     minutes: '0',
   });
@@ -36,9 +37,10 @@ export function OffersTab() {
     addOffer({
       menuItemId: newOffer.menuItemId,
       newPrice: parseFloat(newOffer.newPrice),
+      itemsAvailable: parseInt(newOffer.itemsAvailable),
       validUntil,
     });
-    setNewOffer({ menuItemId: '', newPrice: '', hours: '', minutes: '' });
+    setNewOffer({ menuItemId: '', newPrice: '', itemsAvailable: '', hours: '', minutes: '' });
     setIsOpen(false);
   };
 
@@ -78,6 +80,12 @@ export function OffersTab() {
                 value={newOffer.newPrice}
                 onChange={(e) => setNewOffer({ ...newOffer, newPrice: e.target.value })}
               />
+              <Input
+                type="number"
+                placeholder="Number of Items Available"
+                value={newOffer.itemsAvailable}
+                onChange={(e) => setNewOffer({ ...newOffer, itemsAvailable: e.target.value })}
+              />
               <div className="flex gap-2">
                 <Input
                   type="number"
@@ -111,7 +119,7 @@ export function OffersTab() {
               <CardContent>
                 <div className="space-y-2">
                   <p className="text-lg">
-                    Original Price: ₹{menuItem.price.toFixed(2)}
+                    Original Price: ₹{offer.originalPrice.toFixed(2)}
                   </p>
                   <p className="text-2xl font-bold text-green-600">
                     Offer Price: ₹{offer.newPrice.toFixed(2)}
@@ -119,6 +127,10 @@ export function OffersTab() {
                   <p className="text-sm text-gray-500">
                     Valid until: {new Date(offer.validUntil).toLocaleString()}
                   </p>
+                  <div className="pt-2 border-t mt-2">
+                    <p className="text-sm font-medium">Items Available: {offer.itemsAvailable}</p>
+                    <p className="text-sm font-medium">Total Enquiries: {offer.enquiries || 0}</p>
+                  </div>
                   <Button
                     variant="destructive"
                     className="w-full mt-4"

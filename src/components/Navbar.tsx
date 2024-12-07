@@ -6,12 +6,12 @@ import { Button } from './ui/button';
 
 export function Navbar() {
   const location = useLocation();
-  const { user, signOut } = useAuthStore();
+  const { user, userData, signOut } = useAuthStore();
 
   const links = [
     { href: '/', label: 'Home' },
     { href: '/offers', label: 'Offers' },
-    { href: '/admin', label: 'Admin' },
+    ...(userData?.role === 'hotel' ? [{ href: '/admin', label: 'Admin' }] : []),
   ];
 
   return (

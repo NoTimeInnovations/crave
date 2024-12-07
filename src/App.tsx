@@ -24,7 +24,7 @@ export default function App() {
         <Route
           path="/admin"
           element={
-            <AuthGuard>
+            <AuthGuard requireRole="hotel">
               <Admin />
             </AuthGuard>
           }

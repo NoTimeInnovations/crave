@@ -1,20 +1,41 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Clock, MapPin, Tag } from "lucide-react";
-import { useOfferStore } from "@/store/offerStore";
-import { useMenuStore } from "@/store/menuStore";
+import { Clock, MapPin, Tag, Loader2 } from "lucide-react";
+import { useOfferStore, type Offer } from "@/store/offerStore";
 import { CountdownTimer } from "@/components/CountdownTimer";
+import { OfferTicket } from "@/components/OfferTicket";
 
 export default function Offers() {
-  const { offers, subscribeToOffers, unsubscribeFromOffers } = useOfferStore();
-  const { items: menuItems } = useMenuStore();
+  const { offers, loading, error, subscribeToOffers, unsubscribeFromOffers,incrementEnquiry } = useOfferStore();
+  const [selectedOffer, setSelectedOffer] = useState<Offer | null>(null);
 
   useEffect(() => {
     subscribeToOffers();
     return () => unsubscribeFromOffers();
   }, [subscribeToOffers, unsubscribeFromOffers]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen w-full bg-gradient-to-b from-orange-50 to-orange-100 flex items-center justify-center">
+        <div className="flex items-center gap-2">
+          <Loader2 className="h-6 w-6 animate-spin text-orange-600" />
+          <span className="text-lg text-gray-600">Loading offers...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen w-full bg-gradient-to-b from-orange-50 to-orange-100 flex items-center justify-center">
+        <div className="bg-red-50 text-red-600 p-4 rounded-lg max-w-md text-center">
+          <p>Error loading offers: {error}</p>
+        </div>
+      </div>
+    );
+  }
 
   const activeOffers = offers.filter(
     (offer) => new Date(offer.validUntil) > new Date()
@@ -32,24 +53,21 @@ export default function Offers() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {activeOffers.map((offer) => {
-              const menuItem = menuItems.find((item) => item.id === offer.menuItemId);
-              if (!menuItem) return null;
-
               const discount = Math.round(
-                ((menuItem.price - offer.newPrice) / menuItem.price) * 100
+                ((offer.originalPrice - offer.newPrice) / offer.originalPrice) * 100
               );
 
               return (
                 <Card key={offer.id} className="overflow-hidden hover:shadow-xl transition-shadow">
                   <img 
-                    src={menuItem.image} 
-                    alt={menuItem.name} 
+                    src={offer.dishImage} 
+                    alt={offer.dishName} 
                     className="w-full h-48 object-cover"
                   />
                   <CardHeader>
                     <div className="flex justify-between items-start">
                       <div>
-                        <CardTitle>{menuItem.name}</CardTitle>
+                        <CardTitle>{offer.dishName}</CardTitle>
                         <p className="text-sm text-gray-500">{offer.hotelName}</p>
                       </div>
                       <Badge variant="destructive" className="bg-orange-600">
@@ -61,7 +79,7 @@ export default function Offers() {
                     <div className="space-y-4">
                       <div className="flex justify-between items-center">
                         <span className="text-gray-500 line-through">
-                          ₹{menuItem.price.toFixed(2)}
+                          ₹{offer.originalPrice.toFixed(2)}
                         </span>
                         <span className="text-2xl font-bold text-orange-600">
                           ₹{offer.newPrice.toFixed(2)}
@@ -75,17 +93,23 @@ export default function Offers() {
                         </div>
                         <div className="flex items-center text-sm text-gray-500">
                           <MapPin className="w-4 h-4 mr-2" />
-                          Available for Dine-in & Takeaway
+                          {offer.hotelLocation}
                         </div>
                         <div className="flex flex-wrap gap-2 mt-4">
                           <Badge variant="secondary" className="bg-orange-100 text-orange-800">
                             <Tag className="w-3 h-3 mr-1" />
-                            Limited Time
+                            {offer.itemsAvailable} items left
                           </Badge>
                         </div>
                       </div>
                       
-                      <Button className="w-full bg-orange-600 hover:bg-orange-700">
+                      <Button 
+                        onClick={() => {
+                          setSelectedOffer(offer)
+                          incrementEnquiry(offer.id,offer.hotelId)
+                        }} 
+                        className="w-full bg-orange-600 hover:bg-orange-700"
+                      >
                         Claim Offer
                       </Button>
                     </div>
@@ -94,6 +118,14 @@ export default function Offers() {
               );
             })}
           </div>
+        )}
+
+        {selectedOffer && (
+          <OfferTicket
+            isOpen={!!selectedOffer}
+            onClose={() => setSelectedOffer(null)}
+            offer={selectedOffer}
+          />
         )}
       </div>
     </div>

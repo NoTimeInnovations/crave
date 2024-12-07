@@ -2,15 +2,24 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/store/authStore';
 
-export function AuthGuard({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useAuthStore();
+interface AuthGuardProps {
+  children: React.ReactNode;
+  requireRole?: 'hotel';
+}
+
+export function AuthGuard({ children, requireRole }: AuthGuardProps) {
+  const { user, userData, loading } = useAuthStore();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!loading && !user) {
-      navigate('/login');
+    if (!loading) {
+      if (!user) {
+        navigate('/login');
+      } else if (requireRole && userData?.role !== requireRole) {
+        navigate('/');
+      }
     }
-  }, [user, loading, navigate]);
+  }, [user, userData, loading, navigate, requireRole]);
 
   if (loading) {
     return (
@@ -20,5 +29,9 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
     );
   }
 
-  return user ? <>{children}</> : null;
+  if (!user || (requireRole && userData?.role !== requireRole)) {
+    return null;
+  }
+
+  return <>{children}</>;
 }
