@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { UtensilsCrossed } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { PartnerDialog } from '@/components/PartnerDialog';
 
 export default function Home() {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ export default function Home() {
           buds happy and your wallet happier.
         </p>
 
-        <div className="mt-12">
+        <div className="mt-12 flex items-center justify-center gap-4">
           <Button 
             size="lg"
             onClick={() => navigate('/offers')}
@@ -27,6 +28,7 @@ export default function Home() {
           >
             Let's Go
           </Button>
+          <PartnerDialog />
         </div>
 
         <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">

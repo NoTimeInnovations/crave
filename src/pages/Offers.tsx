@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -7,8 +8,13 @@ import { useMenuStore } from "@/store/menuStore";
 import { CountdownTimer } from "@/components/CountdownTimer";
 
 export default function Offers() {
-  const { offers } = useOfferStore();
+  const { offers, subscribeToOffers, unsubscribeFromOffers } = useOfferStore();
   const { items: menuItems } = useMenuStore();
+
+  useEffect(() => {
+    subscribeToOffers();
+    return () => unsubscribeFromOffers();
+  }, [subscribeToOffers, unsubscribeFromOffers]);
 
   const activeOffers = offers.filter(
     (offer) => new Date(offer.validUntil) > new Date()
@@ -44,7 +50,7 @@ export default function Offers() {
                     <div className="flex justify-between items-start">
                       <div>
                         <CardTitle>{menuItem.name}</CardTitle>
-                        <p className="text-sm text-gray-500">Special Offer</p>
+                        <p className="text-sm text-gray-500">{offer.hotelName}</p>
                       </div>
                       <Badge variant="destructive" className="bg-orange-600">
                         {discount}% OFF

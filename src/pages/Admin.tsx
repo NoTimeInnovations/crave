@@ -1,8 +1,23 @@
+import { useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MenuTab } from "@/components/admin/MenuTab";
 import { OffersTab } from "@/components/admin/OffersTab";
+import { useMenuStore } from '@/store/menuStore';
+import { useOfferStore } from '@/store/offerStore';
 
 export default function Admin() {
+  const { fetchMenu } = useMenuStore();
+  const { subscribeToOffers, unsubscribeFromOffers } = useOfferStore();
+
+  useEffect(() => {
+    fetchMenu();
+    subscribeToOffers();
+
+    return () => {
+      unsubscribeFromOffers();
+    };
+  }, [fetchMenu, subscribeToOffers, unsubscribeFromOffers]);
+
   return (
     <div className="min-h-screen w-full bg-gradient-to-b from-orange-50 to-orange-100">
       <div className="max-w-7xl mx-auto p-8">
