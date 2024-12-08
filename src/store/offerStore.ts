@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { ref, push, remove, onValue, off, runTransaction } from 'firebase/database';
+import { ref, push, remove, onValue, off, get, runTransaction } from 'firebase/database';
 import { doc, getDoc, updateDoc, increment } from 'firebase/firestore';
 import { rtdb, db } from '@/lib/firebase';
 import { useAuthStore } from './authStore';
@@ -14,6 +14,7 @@ export interface Offer {
   validUntil: Date;
   hotelId: string;
   hotelName: string;
+  area: string;
   hotelLocation: string;
   itemsAvailable: number;
   enquiries: number;
@@ -25,12 +26,12 @@ interface OfferState {
   error: string | null;
   subscribeToOffers: () => void;
   unsubscribeFromOffers: () => void;
-  addOffer: (offer: Omit<Offer, 'id' | 'hotelId' | 'hotelName' | 'hotelLocation' | 'dishName' | 'dishImage' | 'originalPrice' | 'enquiries'>) => Promise<void>;
+  addOffer: (offer: Omit<Offer, 'id' | 'hotelId' | 'hotelName' | 'area' | 'hotelLocation' | 'dishName' | 'dishImage' | 'originalPrice' | 'enquiries'>) => Promise<void>;
   deleteOffer: (id: string) => Promise<void>;
   incrementEnquiry: (offerId: string, hotelId: string) => Promise<void>;
 }
 
-export const useOfferStore = create<OfferState>((set) => {
+export const useOfferStore = create<OfferState>((set, get) => {
   let offersRef: ReturnType<typeof ref> | null = null;
 
   return {
@@ -100,6 +101,7 @@ export const useOfferStore = create<OfferState>((set) => {
           ...offer,
           hotelId: user.uid,
           hotelName: userData.hotelName,
+          area: userData.area,
           hotelLocation: userData.location,
           dishName: menuItem.name,
           dishImage: menuItem.image,

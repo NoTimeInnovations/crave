@@ -6,24 +6,35 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { type Offer } from '@/store/offerStore';
-import { useState } from 'react';
+import { useClaimedOffersStore } from '@/store/claimedOffersStore';
+import { useEffect, useState } from 'react';
 
 interface OfferTicketProps {
   isOpen: boolean;
   onClose: () => void;
   offer: Offer;
+  claimedOffer?: ReturnType<typeof useClaimedOffersStore.getState.getClaimedOffer>;
 }
 
-export function OfferTicket({ isOpen, onClose, offer }: OfferTicketProps) {
-  const [token] = useState(() => Math.random().toString(36).substring(2, 10).toUpperCase());
+export function OfferTicket({ isOpen, onClose, offer, claimedOffer }: OfferTicketProps) {
   const [isLoading, setIsLoading] = useState(false);
+  const [token, setToken] = useState<string>('');
+  const { addClaimedOffer } = useClaimedOffersStore();
+
+  useEffect(() => {
+    if (claimedOffer) {
+      setToken(claimedOffer.token);
+    } else {
+      setToken(addClaimedOffer(offer));
+    }
+  }, [claimedOffer, offer, addClaimedOffer]);
 
   const handleClaim = async () => {
     try {
       setIsLoading(true);
       window.open(offer.hotelLocation, '_blank');
     } catch (error) {
-      console.error('Failed to increment enquiry:', error);
+      console.error('Failed to process claim:', error);
     } finally {
       setIsLoading(false);
     }

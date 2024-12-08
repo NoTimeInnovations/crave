@@ -3,14 +3,9 @@ import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useMenuStore } from '@/store/menuStore';
 import { useOfferStore } from '@/store/offerStore';
 
@@ -59,47 +54,77 @@ export function OffersTab() {
               <DialogTitle>Create New Offer</DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4">
-              <Select
-                value={newOffer.menuItemId}
-                onValueChange={(value) => setNewOffer({ ...newOffer, menuItemId: value })}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a dish" />
-                </SelectTrigger>
-                <SelectContent>
-                  {items.map((item) => (
-                    <SelectItem key={item.id} value={item.id}>
-                      {item.name} - ₹{item.price.toFixed(2)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <Input
-                type="number"
-                placeholder="New Price in ₹"
-                value={newOffer.newPrice}
-                onChange={(e) => setNewOffer({ ...newOffer, newPrice: e.target.value })}
-              />
-              <Input
-                type="number"
-                placeholder="Number of Items Available"
-                value={newOffer.itemsAvailable}
-                onChange={(e) => setNewOffer({ ...newOffer, itemsAvailable: e.target.value })}
-              />
-              <div className="flex gap-2">
+              <div className="space-y-2">
+                <Label htmlFor="menuItem">Select Menu Item</Label>
+                <Select
+                  value={newOffer.menuItemId}
+                  onValueChange={(value) => setNewOffer({ ...newOffer, menuItemId: value })}
+                >
+                  <SelectTrigger id="menuItem">
+                    <SelectValue placeholder="Select a dish" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {items.map((item) => (
+                      <SelectItem key={item.id} value={item.id}>
+                        {item.name} - ₹{item.price.toFixed(2)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="newPrice">New Price in ₹</Label>
                 <Input
+                  id="newPrice"
                   type="number"
-                  placeholder="Hours"
-                  value={newOffer.hours}
-                  onChange={(e) => setNewOffer({ ...newOffer, hours: e.target.value })}
-                />
-                <Input
-                  type="number"
-                  placeholder="Minutes"
-                  value={newOffer.minutes}
-                  onChange={(e) => setNewOffer({ ...newOffer, minutes: e.target.value })}
+                  placeholder="Enter new price"
+                  value={newOffer.newPrice}
+                  onChange={(e) => setNewOffer({ ...newOffer, newPrice: e.target.value })}
                 />
               </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="itemsAvailable">Number of Items Available</Label>
+                <Input
+                  id="itemsAvailable"
+                  type="number"
+                  placeholder="Enter quantity"
+                  value={newOffer.itemsAvailable}
+                  onChange={(e) => setNewOffer({ ...newOffer, itemsAvailable: e.target.value })}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label>Offer Duration</Label>
+                <div className="flex gap-2">
+                  <div className="flex-1 space-y-2">
+                    <Label htmlFor="hours" className="text-sm text-gray-500">Hours</Label>
+                    <Input
+                      id="hours"
+                      type="number"
+                      min="0"
+                      max="23"
+                      placeholder="Hours"
+                      value={newOffer.hours}
+                      onChange={(e) => setNewOffer({ ...newOffer, hours: e.target.value })}
+                    />
+                  </div>
+                  <div className="flex-1 space-y-2">
+                    <Label htmlFor="minutes" className="text-sm text-gray-500">Minutes</Label>
+                    <Input
+                      id="minutes"
+                      type="number"
+                      min="0"
+                      max="59"
+                      placeholder="Minutes"
+                      value={newOffer.minutes}
+                      onChange={(e) => setNewOffer({ ...newOffer, minutes: e.target.value })}
+                    />
+                  </div>
+                </div>
+              </div>
+
               <Button type="submit" className="w-full">Create Offer</Button>
             </form>
           </DialogContent>

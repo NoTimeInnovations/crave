@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import {
   Dialog,
   DialogContent,
@@ -9,15 +11,25 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { useAuthStore } from '@/store/authStore';
+import { useLocationStore } from '@/store/locationStore';
 import { MapPin } from 'lucide-react';
 
 export function PartnerDialog() {
   const navigate = useNavigate();
   const { signUpAsPartner } = useAuthStore();
+  const { locations } = useLocationStore();
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState({
     hotelName: '',
+    area: '',
     location: '',
     email: '',
     password: '',
@@ -31,6 +43,7 @@ export function PartnerDialog() {
         formData.email,
         formData.password,
         formData.hotelName,
+        formData.area,
         formData.location
       );
       setIsOpen(false);
@@ -66,8 +79,10 @@ export function PartnerDialog() {
             </div>
           )}
           <div className="space-y-2">
+            <Label htmlFor="hotelName">Hotel Name</Label>
             <Input
-              placeholder="Hotel Name"
+              id="hotelName"
+              placeholder="Enter hotel name"
               value={formData.hotelName}
               onChange={(e) =>
                 setFormData({ ...formData, hotelName: e.target.value })
@@ -75,41 +90,69 @@ export function PartnerDialog() {
               required
             />
           </div>
-          <div className="space-y-2 relative">
+
+          <div className="space-y-2">
+            <Label htmlFor="area">Area</Label>
+            <Select
+              value={formData.area}
+              onValueChange={(value) => setFormData({ ...formData, area: value })}
+            >
+              <SelectTrigger id="area">
+                <SelectValue placeholder="Select area" />
+              </SelectTrigger>
+              <SelectContent>
+                {locations.map((location) => (
+                  <SelectItem key={location} value={location}>
+                    {location}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="location">Detailed Location</Label>
             <div className="relative">
-              <Input
-                placeholder="Location"
+              <Textarea
+                id="location"
+                placeholder="Enter detailed address"
                 value={formData.location}
                 onChange={(e) =>
                   setFormData({ ...formData, location: e.target.value })
                 }
                 required
-                className="pr-10"
+                className="pr-10 min-h-[100px]"
               />
               <Button
                 type="button"
                 variant="ghost"
                 size="icon"
-                className="absolute right-2 top-1/2 -translate-y-1/2"
+                className="absolute right-2 top-2"
                 onClick={openGoogleMaps}
               >
                 <MapPin className="h-4 w-4 text-gray-500" />
               </Button>
             </div>
           </div>
+
           <div className="space-y-2">
+            <Label htmlFor="email">Email</Label>
             <Input
+              id="email"
               type="email"
-              placeholder="Email"
+              placeholder="Enter email"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               required
             />
           </div>
+
           <div className="space-y-2">
+            <Label htmlFor="password">Password</Label>
             <Input
+              id="password"
               type="password"
-              placeholder="Password"
+              placeholder="Enter password"
               value={formData.password}
               onChange={(e) =>
                 setFormData({ ...formData, password: e.target.value })
@@ -117,6 +160,7 @@ export function PartnerDialog() {
               required
             />
           </div>
+
           <Button type="submit" className="w-full bg-orange-600 hover:bg-orange-700">
             Register
           </Button>

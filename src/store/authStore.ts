@@ -13,6 +13,7 @@ interface UserData {
   email: string;
   role: 'user' | 'hotel';
   hotelName?: string;
+  area?: string;
   location?: string;
 }
 
@@ -22,7 +23,7 @@ interface AuthState {
   loading: boolean;
   error: string | null;
   signUp: (email: string, password: string) => Promise<void>;
-  signUpAsPartner: (email: string, password: string, hotelName: string, location: string) => Promise<void>;
+  signUpAsPartner: (email: string, password: string, hotelName: string, area: string, location: string) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   fetchUserData: (uid: string) => Promise<void>;
@@ -64,13 +65,14 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
   },
 
-  signUpAsPartner: async (email, password, hotelName, location) => {
+  signUpAsPartner: async (email, password, hotelName, area, location) => {
     try {
       set({ error: null });
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       await setDoc(doc(db, 'users', userCredential.user.uid), {
         email,
         hotelName,
+        area,
         location,
         role: 'hotel',
         enquiry: 0,
