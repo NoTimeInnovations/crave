@@ -13,7 +13,18 @@ interface OfferTicketProps {
   isOpen: boolean;
   onClose: () => void;
   offer: Offer;
-  claimedOffer?: ReturnType<typeof useClaimedOffersStore.getState.getClaimedOffer>;
+  claimedOffer?: {
+    offerId: string;
+    token: string;
+    claimedAt: string;
+    offerDetails: {
+      dishName: string;
+      hotelName: string;
+      originalPrice: number;
+      newPrice: number;
+      hotelLocation: string;
+    };
+  };
 }
 
 export function OfferTicket({ isOpen, onClose, offer, claimedOffer }: OfferTicketProps) {

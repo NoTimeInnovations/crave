@@ -105,7 +105,6 @@ export default function Offers() {
                 ((offer.originalPrice - offer.newPrice) / offer.originalPrice) * 100
               );
               const claimed = isOfferClaimed(offer.id);
-              const claimedOffer = claimed ? getClaimedOffer(offer.id) : null;
 
               return (
                 <Card key={offer.id} className="overflow-hidden hover:shadow-xl transition-shadow">
