@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { ref, push, remove, onValue, off, get, runTransaction } from 'firebase/database';
+import { ref, push, remove, onValue, off, runTransaction } from 'firebase/database';
 import { doc, getDoc, updateDoc, increment } from 'firebase/firestore';
 import { rtdb, db } from '@/lib/firebase';
 import { useAuthStore } from './authStore';
@@ -30,7 +30,7 @@ interface OfferState {
   incrementEnquiry: (offerId: string, hotelId: string) => Promise<void>;
 }
 
-export const useOfferStore = create<OfferState>((set, get) => {
+export const useOfferStore = create<OfferState>((set) => {
   let offersRef: ReturnType<typeof ref> | null = null;
 
   return {

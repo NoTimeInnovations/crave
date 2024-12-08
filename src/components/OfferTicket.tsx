@@ -5,9 +5,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { MapPin } from 'lucide-react';
 import { type Offer } from '@/store/offerStore';
-import { useOfferStore } from '@/store/offerStore';
 import { useState } from 'react';
 
 interface OfferTicketProps {
