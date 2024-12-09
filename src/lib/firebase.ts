@@ -22,8 +22,19 @@ export const messaging = getMessaging(app);
 
 
 export const generateToken = async() => {
-  const permission = Notification.requestPermission();
-  if(permission == "granted"){
-    const token = getToken(messaging, {vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY})
+  const permission = await Notification.requestPermission();
+  if (permission === "granted") {
+    try {
+      const currentToken = await getToken(messaging, { vapidKey: 'BFU5alXLphNpTi0MUbQ9br2rQAscs3pDYXaO_nsCZCsD1Y3z8lqOpBRqQSOeUw2r0WYDxJS6BE1aaoreDVraJIY' });
+      if (currentToken) {
+        console.log('Token:', currentToken);
+      } else {
+        console.error('No registration token available. Request permission to generate one.');
+      }
+    } catch (error) {
+      console.error('An error occurred while retrieving token. ', error);
+    }
+  } else {
+    console.warn('Permission not granted for notifications.');
   }
 }
