@@ -13,6 +13,7 @@ export default function App() {
   
   useEffect(()=>{
     generateToken();
+    console.log('release 1.0.0');
     onMessage(messaging, (payload) => {
       console.log('Message received. ', payload);
       if(payload.notification && payload.notification.title){
