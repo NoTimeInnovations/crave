@@ -5,8 +5,19 @@ import Admin from './pages/Admin';
 import Login from './pages/Login';
 import { Navbar } from './components/Navbar';
 import { AuthGuard } from './components/AuthGuard';
+import {useEffect} from "react";
+import { generateToken, messaging } from './lib/firebase.ts';
+import { onMessage } from "firebase/messaging";
 
 export default function App() {
+  
+  useEffect(()=>{
+    generateToken();
+    onMessage(messaging, (payload) => {
+      console.log('Message received. ', payload);
+    });
+  },[])
+  
   return (
     <>
       <Navbar />
