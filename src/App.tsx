@@ -15,6 +15,12 @@ export default function App() {
     generateToken();
     onMessage(messaging, (payload) => {
       console.log('Message received. ', payload);
+      if(payload.notification && payload.notification.title){
+        new Notification(payload.notification.title, {
+          body: payload.notification.body,
+          icon: payload.notification.image,
+        });
+      }
     });
   },[])
   

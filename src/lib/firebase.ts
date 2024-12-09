@@ -3,6 +3,7 @@ import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { getDatabase } from 'firebase/database';
 import { getMessaging, getToken } from "firebase/messaging";
+import subscribeTopic from './subscibeTopic';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -28,6 +29,7 @@ export const generateToken = async() => {
       const currentToken = await getToken(messaging, { vapidKey: 'BFU5alXLphNpTi0MUbQ9br2rQAscs3pDYXaO_nsCZCsD1Y3z8lqOpBRqQSOeUw2r0WYDxJS6BE1aaoreDVraJIY' });
       if (currentToken) {
         console.log('Token:', currentToken);
+        await subscribeTopic(currentToken);
       } else {
         console.error('No registration token available. Request permission to generate one.');
       }
