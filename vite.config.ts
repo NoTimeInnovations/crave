@@ -12,10 +12,10 @@ export default defineConfig({
         enabled: true, // Enable PWA support in development mode for testing
       },
       manifest: {
-        name: 'Crave',
-        short_name: 'Crave',
+        name: 'Cravings',
+        short_name: 'Cravings',
         description: 'Discover the best food deals and offers in your neighborhood. From cozy cafes to fine dining, we bring you exclusive discounts that will make your taste buds happy and your wallet happier',
-        theme_color: '#ffffff',
+        theme_color: '#ea580c',
         icons: [
           {
             src: 'icon-64x64.png',
