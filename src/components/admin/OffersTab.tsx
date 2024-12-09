@@ -8,10 +8,12 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useMenuStore } from '@/store/menuStore';
 import { useOfferStore } from '@/store/offerStore';
+import { useAuthStore } from '@/store/authStore';
 
 export function OffersTab() {
   const { items } = useMenuStore();
   const { offers, addOffer, deleteOffer } = useOfferStore();
+  const { userData } = useAuthStore();
   const [isOpen, setIsOpen] = useState(false);
   const [newOffer, setNewOffer] = useState({
     menuItemId: '',
@@ -34,6 +36,7 @@ export function OffersTab() {
       newPrice: parseFloat(newOffer.newPrice),
       itemsAvailable: parseInt(newOffer.itemsAvailable),
       validUntil,
+      category: userData?.category || 'hotel', // Add category from userData
     });
     setNewOffer({ menuItemId: '', newPrice: '', itemsAvailable: '', hours: '', minutes: '' });
     setIsOpen(false);

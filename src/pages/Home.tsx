@@ -11,7 +11,7 @@ export default function Home() {
       <div className="max-w-3xl mx-auto text-center space-y-8">
         <div className="flex items-center justify-center space-x-3 mb-8">
           <UtensilsCrossed className="h-12 w-12 text-orange-600" />
-          <h1 className="text-5xl font-bold text-gray-900">Crave</h1>
+          <h1 className="text-5xl font-bold text-gray-900">Cravings</h1>
         </div>
         
         <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
