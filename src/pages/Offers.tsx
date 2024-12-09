@@ -142,7 +142,7 @@ export default function Offers() {
                         </div>
                         <div className="flex items-center text-sm text-gray-500">
                           <MapPin className="w-4 h-4 mr-2" />
-                          {offer.area}
+                          {offer.area} - {offer.hotelLocation}
                         </div>
                         <div className="flex gap-3">
                           <div className="flex flex-wrap gap-2 mt-4">
