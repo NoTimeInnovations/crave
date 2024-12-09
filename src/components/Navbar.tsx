@@ -58,7 +58,7 @@ export function Navbar() {
           <div className="flex items-center">
             <Link to="/" className="flex items-center space-x-2">
               <UtensilsCrossed className="h-6 w-6 text-orange-600" />
-              <span className="text-xl font-bold text-gray-900">Crave</span>
+              <span className="text-xl font-bold text-gray-900">Cravings</span>
             </Link>
           </div>
 
@@ -81,7 +81,7 @@ export function Navbar() {
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center space-x-2">
                       <UtensilsCrossed className="h-6 w-6 text-orange-600" />
-                      <span className="text-xl font-bold text-gray-900">Crave</span>
+                      <span className="text-xl font-bold text-gray-900">Cravings</span>
                     </div>
                     <Button
                       variant="ghost"
