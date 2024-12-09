@@ -8,11 +8,28 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      workbox: {
-        clientsClaim: true,
-        skipWaiting: true
-      }
-    })
+      devOptions: {
+        enabled: true, // Enable PWA support in development mode for testing
+      },
+      manifest: {
+        name: 'Crave',
+        short_name: 'Crave',
+        description: 'Discover the best food deals and offers in your neighborhood. From cozy cafes to fine dining, we bring you exclusive discounts that will make your taste buds happy and your wallet happier',
+        theme_color: '#ffffff',
+        icons: [
+          {
+            src: 'pwa-192x192.png',
+            sizes: '192x192',
+            type: 'image/png',
+          },
+          {
+            src: 'pwa-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+          },
+        ],
+      },
+    }),
   ],
   resolve: {
     alias: {
