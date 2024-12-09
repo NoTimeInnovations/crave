@@ -38,6 +38,6 @@ messaging.onBackgroundMessage((payload) => {
       icon: payload.data.image,
     };
 
-    new Notification(notificationTitle , notificationOptions)
+    self.registration.showNotification(notificationTitle, notificationOptions);
   }
 });
