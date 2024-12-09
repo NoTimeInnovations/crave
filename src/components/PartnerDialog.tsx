@@ -21,6 +21,7 @@ import {
 import { useAuthStore } from '@/store/authStore';
 import { useLocationStore } from '@/store/locationStore';
 import { MapPin } from 'lucide-react';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 export function PartnerDialog() {
   const navigate = useNavigate();
@@ -33,6 +34,7 @@ export function PartnerDialog() {
     location: '',
     email: '',
     password: '',
+    category: '',
   });
   const [error, setError] = useState<string | null>(null);
 
@@ -44,7 +46,8 @@ export function PartnerDialog() {
         formData.password,
         formData.hotelName,
         formData.area,
-        formData.location
+        formData.location,
+        formData.category
       );
       setIsOpen(false);
       navigate('/admin');
@@ -68,103 +71,142 @@ export function PartnerDialog() {
           Partner with Us
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Register as Partner</DialogTitle>
+      <DialogContent className="sm:max-w-[425px] h-[90vh] flex flex-col">
+        <DialogHeader className="px-6 pt-6">
+          <DialogTitle className="text-2xl font-bold text-gray-900">
+            Register as Partner
+          </DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4 mt-4">
-          {error && (
-            <div className="bg-red-50 text-red-600 p-3 rounded-md mb-4">
-              {error}
-            </div>
-          )}
-          <div className="space-y-2">
-            <Label htmlFor="hotelName">Hotel Name</Label>
-            <Input
-              id="hotelName"
-              placeholder="Enter hotel name"
-              value={formData.hotelName}
-              onChange={(e) =>
-                setFormData({ ...formData, hotelName: e.target.value })
-              }
-              required
-            />
-          </div>
+        <ScrollArea className="flex-1 px-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {error && (
+              <div className="bg-red-50 text-red-600 p-3 rounded-md mb-4">
+                {error}
+              </div>
+            )}
 
-          <div className="space-y-2">
-            <Label htmlFor="area">Area</Label>
-            <Select
-              value={formData.area}
-              onValueChange={(value) => setFormData({ ...formData, area: value })}
-            >
-              <SelectTrigger id="area">
-                <SelectValue placeholder="Select area" />
-              </SelectTrigger>
-              <SelectContent>
-                {locations.map((location) => (
-                  <SelectItem key={location} value={location}>
-                    {location}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="location">Detailed Location</Label>
-            <div className="relative">
-              <Textarea
-                id="location"
-                placeholder="Enter detailed address"
-                value={formData.location}
-                onChange={(e) =>
-                  setFormData({ ...formData, location: e.target.value })
-                }
-                required
-                className="pr-10 min-h-[100px]"
-              />
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                className="absolute right-2 top-2"
-                onClick={openGoogleMaps}
+            <div className="space-y-2">
+              <Label htmlFor="category" className="text-sm font-medium text-gray-700">
+                Category
+              </Label>
+              <Select
+                value={formData.category}
+                onValueChange={(value) => setFormData({ ...formData, category: value })}
               >
-                <MapPin className="h-4 w-4 text-gray-500" />
-              </Button>
+                <SelectTrigger id="category" className="w-full">
+                  <SelectValue placeholder="Select your category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="hotel">Hotel</SelectItem>
+                  <SelectItem value="supermarket">Supermarket</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
-          </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="Enter email"
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              required
-            />
-          </div>
+            <div className="space-y-2">
+              <Label htmlFor="hotelName" className="text-sm font-medium text-gray-700">
+                Hotel Name
+              </Label>
+              <Input
+                id="hotelName"
+                placeholder="Enter your hotel name"
+                value={formData.hotelName}
+                onChange={(e) =>
+                  setFormData({ ...formData, hotelName: e.target.value })
+                }
+                className="w-full"
+                required
+              />
+            </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              type="password"
-              placeholder="Enter password"
-              value={formData.password}
-              onChange={(e) =>
-                setFormData({ ...formData, password: e.target.value })
-              }
-              required
-            />
-          </div>
+            <div className="space-y-2">
+              <Label htmlFor="area" className="text-sm font-medium text-gray-700">
+                Area
+              </Label>
+              <Select
+                value={formData.area}
+                onValueChange={(value) => setFormData({ ...formData, area: value })}
+              >
+                <SelectTrigger id="area" className="w-full">
+                  <SelectValue placeholder="Select your area" />
+                </SelectTrigger>
+                <SelectContent>
+                  {locations.map((location) => (
+                    <SelectItem key={location} value={location}>
+                      {location}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
-          <Button type="submit" className="w-full bg-orange-600 hover:bg-orange-700">
-            Register
-          </Button>
-        </form>
+            <div className="space-y-2">
+              <Label htmlFor="location" className="text-sm font-medium text-gray-700">
+                Detailed Location
+              </Label>
+              <div className="relative">
+                <Textarea
+                  id="location"
+                  placeholder="Enter your detailed address"
+                  value={formData.location}
+                  onChange={(e) =>
+                    setFormData({ ...formData, location: e.target.value })
+                  }
+                  className="min-h-[100px] pr-10"
+                  required
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-2 top-2"
+                  onClick={openGoogleMaps}
+                >
+                  <MapPin className="h-4 w-4 text-gray-500" />
+                </Button>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="email" className="text-sm font-medium text-gray-700">
+                Email
+              </Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="Enter your email"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                className="w-full"
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="password" className="text-sm font-medium text-gray-700">
+                Password
+              </Label>
+              <Input
+                id="password"
+                type="password"
+                placeholder="Create a password"
+                value={formData.password}
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
+                className="w-full"
+                required
+              />
+            </div>
+
+            <Button 
+              type="submit" 
+              className="w-full bg-orange-600 hover:bg-orange-700 text-white mt-6"
+            >
+              Register
+            </Button>
+          </form>
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   );
