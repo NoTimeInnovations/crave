@@ -6,9 +6,12 @@ async function subscribeTopic(token : string) {
         body: JSON.stringify({ token }),
       });
       const data = await response.json();
-      console.log('Token saved:', data);
+      if(!data){
+        throw new Error('Failed to turn on offer notifications');
+      }
+      console.log('Offer notifications turned on!');
     } catch (error) {
-      console.error('Error saving token:', error);
+      console.error('Failed to turn on offer notifications', error);
     }
   }
 

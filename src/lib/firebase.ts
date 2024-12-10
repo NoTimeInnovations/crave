@@ -24,11 +24,11 @@ export const messaging = getMessaging(app);
 
 export const generateToken = async() => {
   const permission = await Notification.requestPermission();
+  console.log('Notification permission:', permission);
   if (permission === "granted") {
     try {
       const currentToken = await getToken(messaging, { vapidKey: 'BFU5alXLphNpTi0MUbQ9br2rQAscs3pDYXaO_nsCZCsD1Y3z8lqOpBRqQSOeUw2r0WYDxJS6BE1aaoreDVraJIY' });
       if (currentToken) {
-        console.log('Token:', currentToken);
         await subscribeTopic(currentToken);
       } else {
         console.error('No registration token available. Request permission to generate one.');

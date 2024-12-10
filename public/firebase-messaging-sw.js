@@ -23,6 +23,14 @@ firebase.initializeApp({
   appId: "1:949249409105:web:56dc2befc107e3ad25b870",
 });
 
+// Handle notification click event
+self.addEventListener('notificationclick', function(event) {
+  event.notification.close();
+  event.waitUntil(
+    clients.openWindow('https://cravings.live/offers')
+  );
+});
+
 // Retrieve an instance of Firebase Messaging so that it can handle background
 // messages.
 const messaging = firebase.messaging();
@@ -31,13 +39,4 @@ messaging.onBackgroundMessage((payload) => {
     "[firebase-messaging-sw.js] Received background message ",
     payload
   );
-  if (payload.data) {
-    const notificationTitle = payload.data.title;
-    const notificationOptions = {
-      body: payload.data.body,
-      icon: payload.data.image,
-    };
-
-    self.registration.showNotification(notificationTitle, notificationOptions);
-  }
 });

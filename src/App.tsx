@@ -11,17 +11,25 @@ import { onMessage } from "firebase/messaging";
 
 export default function App() {
   useEffect(() => {
+
+
     generateToken();
-    console.log('release 1.0.0');
+    
+
     onMessage(messaging, (payload) => {
       console.log('Message received. ', payload);
-      if(payload.notification && payload.notification.title){
-        new Notification(payload.notification.title, {
-          body: payload.notification.body,
-          icon: payload.notification.image,
-        });
-      }
+        if (navigator.serviceWorker) {
+          navigator.serviceWorker.getRegistration().then(registration => {
+            if (registration && payload.notification ) {
+              registration.showNotification(payload.notification.title || 'No Title', {
+                body: payload.notification.body,
+                icon: payload.notification.icon
+              });
+            }
+          });
+        }
     });
+
   }, []);
   
   return (
