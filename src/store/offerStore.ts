@@ -18,6 +18,7 @@ export interface Offer {
   hotelLocation: string;
   itemsAvailable: number;
   enquiries: number;
+  category: string;
 }
 
 interface OfferState {
@@ -107,6 +108,7 @@ export const useOfferStore = create<OfferState>((set) => {
           dishImage: menuItem.image,
           originalPrice: menuItem.price,
           enquiries: 0,
+          category: userData.category || 'hotel',
           validUntil: offer.validUntil.toISOString()
         });
       } catch (error) {

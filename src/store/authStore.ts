@@ -15,6 +15,7 @@ interface UserData {
   hotelName?: string;
   area?: string;
   location?: string;
+  category?: string;
 }
 
 interface AuthState {
@@ -23,7 +24,7 @@ interface AuthState {
   loading: boolean;
   error: string | null;
   signUp: (email: string, password: string) => Promise<void>;
-  signUpAsPartner: (email: string, password: string, hotelName: string, area: string, location: string) => Promise<void>;
+  signUpAsPartner: (email: string, password: string, hotelName: string, area: string, location: string, category: string) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   fetchUserData: (uid: string) => Promise<void>;
@@ -65,7 +66,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
   },
 
-  signUpAsPartner: async (email, password, hotelName, area, location) => {
+  signUpAsPartner: async (email, password, hotelName, area, location, category) => {
     try {
       set({ error: null });
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -74,6 +75,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         hotelName,
         area,
         location,
+        category,
         role: 'hotel',
         enquiry: 0,
         createdAt: new Date().toISOString(),
