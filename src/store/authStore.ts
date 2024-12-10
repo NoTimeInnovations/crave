@@ -11,11 +11,13 @@ import { auth } from '@/lib/firebase';
 
 interface UserData {
   email: string;
-  role: 'user' | 'hotel';
+  role: 'user' | 'hotel' | 'superadmin';
   hotelName?: string;
   area?: string;
   location?: string;
   category?: string;
+  phone?: string;
+  verified?: boolean;
 }
 
 interface AuthState {
@@ -24,7 +26,7 @@ interface AuthState {
   loading: boolean;
   error: string | null;
   signUp: (email: string, password: string) => Promise<void>;
-  signUpAsPartner: (email: string, password: string, hotelName: string, area: string, location: string, category: string) => Promise<void>;
+  signUpAsPartner: (email: string, password: string, hotelName: string, area: string, location: string, category: string, phone: string) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   fetchUserData: (uid: string) => Promise<void>;
@@ -66,7 +68,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
   },
 
-  signUpAsPartner: async (email, password, hotelName, area, location, category) => {
+  signUpAsPartner: async (email, password, hotelName, area, location, category, phone) => {
     try {
       set({ error: null });
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -76,7 +78,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         area,
         location,
         category,
+        phone,
         role: 'hotel',
+        verified: false,
         enquiry: 0,
         createdAt: new Date().toISOString(),
       });

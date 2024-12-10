@@ -19,6 +19,7 @@ export interface Offer {
   itemsAvailable: number;
   enquiries: number;
   category: string;
+  description?: string;
 }
 
 interface OfferState {
@@ -27,7 +28,7 @@ interface OfferState {
   error: string | null;
   subscribeToOffers: () => void;
   unsubscribeFromOffers: () => void;
-  addOffer: (offer: Omit<Offer, 'id' | 'hotelId' | 'hotelName' | 'area' | 'hotelLocation' | 'dishName' | 'dishImage' | 'originalPrice' | 'enquiries'>) => Promise<void>;
+  addOffer: (offer: Omit<Offer, 'id' | 'hotelId' | 'hotelName' | 'area' | 'hotelLocation' | 'dishName' | 'dishImage' | 'originalPrice' | 'enquiries' | 'description'>) => Promise<void>;
   deleteOffer: (id: string) => Promise<void>;
   incrementEnquiry: (offerId: string, hotelId: string) => Promise<void>;
 }
@@ -55,7 +56,8 @@ export const useOfferStore = create<OfferState>((set) => {
                 id: key,
                 ...data[key],
                 validUntil: new Date(data[key].validUntil),
-                enquiries: data[key].enquiries || 0
+                enquiries: data[key].enquiries || 0,
+                description: data[key].description || ''
               });
             });
           }
@@ -107,6 +109,7 @@ export const useOfferStore = create<OfferState>((set) => {
           dishName: menuItem.name,
           dishImage: menuItem.image,
           originalPrice: menuItem.price,
+          description: menuItem.description || '',
           enquiries: 0,
           category: userData.category || 'hotel',
           validUntil: offer.validUntil.toISOString()

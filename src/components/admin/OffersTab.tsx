@@ -36,7 +36,7 @@ export function OffersTab() {
       newPrice: parseFloat(newOffer.newPrice),
       itemsAvailable: parseInt(newOffer.itemsAvailable),
       validUntil,
-      category: userData?.category || 'hotel', // Add category from userData
+      category: userData?.category || 'hotel',
     });
     setNewOffer({ menuItemId: '', newPrice: '', itemsAvailable: '', hours: '', minutes: '' });
     setIsOpen(false);
@@ -64,7 +64,7 @@ export function OffersTab() {
                   onValueChange={(value) => setNewOffer({ ...newOffer, menuItemId: value })}
                 >
                   <SelectTrigger id="menuItem">
-                    <SelectValue placeholder="Select a dish" />
+                    <SelectValue placeholder="Select a product" />
                   </SelectTrigger>
                   <SelectContent>
                     {items.map((item) => (
