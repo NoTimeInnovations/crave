@@ -12,27 +12,45 @@ export default defineConfig({
         enabled: true, // Enable PWA support in development mode for testing
       },
       manifest: {
-        name: 'Cravings',
-        short_name: 'Cravings',
-        description: 'Discover the best food deals and offers in your neighborhood. From cozy cafes to fine dining, we bring you exclusive discounts that will make your taste buds happy and your wallet happier',
-        theme_color: '#ea580c',
-        icons: [
+        "name": "Cravings",
+        "short_name": "Cravings",
+        "start_url": "/",
+        "display": "fullscreen",
+        "background_color": "#ffffff",
+        "lang": "en",
+        "scope": "/",
+        "description": "Discover the best food deals and offers in your neighborhood. From cozy cafes to fine dining, we bring you exclusive discounts that will make your taste buds happy and your wallet happier",
+        "theme_color": "#ea580c",
+        "icons": [
           {
-            src: 'icon-64x64.png',
-            sizes: '64x64',
-            type: 'image/png',
+            "src": "icon-64x64.png",
+            "sizes": "64x64",
+            "type": "image/png"
           },
           {
-            src: 'icon-192x192.png',
-            sizes: '192x192',
-            type: 'image/png',
+            "src": "icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
           },
           {
-            src: 'icon-512x512.png',
-            sizes: '512x512',
-            type: 'image/png',
-          },
+            "src": "icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+          }
         ],
+        "id": "com.cravings.notime.app",
+        "orientation": "portrait",
+        "display_override": [
+          "window-controls-overlay",
+          "fullscreen",
+          "minimal-ui"
+        ],
+        "categories": [
+          "business",
+          "finance",
+          "food",
+          "shopping"
+        ]
       },
     }),
   ],
