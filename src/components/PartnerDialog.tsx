@@ -35,6 +35,7 @@ export function PartnerDialog() {
     email: '',
     password: '',
     category: '',
+    phone: '',
   });
   const [error, setError] = useState<string | null>(null);
 
@@ -47,7 +48,8 @@ export function PartnerDialog() {
         formData.hotelName,
         formData.area,
         formData.location,
-        formData.category
+        formData.category,
+        formData.phone
       );
       setIsOpen(false);
       navigate('/admin');
@@ -105,14 +107,31 @@ export function PartnerDialog() {
 
             <div className="space-y-2">
               <Label htmlFor="hotelName" className="text-sm font-medium text-gray-700">
-                Hotel Name
+                Business Name
               </Label>
               <Input
                 id="hotelName"
-                placeholder="Enter your hotel name"
+                placeholder="Enter your business name"
                 value={formData.hotelName}
                 onChange={(e) =>
                   setFormData({ ...formData, hotelName: e.target.value })
+                }
+                className="w-full"
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="phone" className="text-sm font-medium text-gray-700">
+                Phone Number
+              </Label>
+              <Input
+                id="phone"
+                type="tel"
+                placeholder="Enter your phone number"
+                value={formData.phone}
+                onChange={(e) =>
+                  setFormData({ ...formData, phone: e.target.value })
                 }
                 className="w-full"
                 required
@@ -142,12 +161,12 @@ export function PartnerDialog() {
 
             <div className="space-y-2">
               <Label htmlFor="location" className="text-sm font-medium text-gray-700">
-                Detailed Location
+                Google Map Location
               </Label>
               <div className="relative">
                 <Textarea
                   id="location"
-                  placeholder="Enter your detailed address"
+                  placeholder="Paste your gmap location"
                   value={formData.location}
                   onChange={(e) =>
                     setFormData({ ...formData, location: e.target.value })
