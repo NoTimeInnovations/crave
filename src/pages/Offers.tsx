@@ -12,7 +12,6 @@ import { useLocationStore } from "@/store/locationStore";
 import { useAuthStore } from "@/store/authStore";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
-import { PartnerDialog } from '@/components/PartnerDialog';
 import {
   Select,
   SelectContent,
